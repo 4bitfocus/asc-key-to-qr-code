@@ -1,4 +1,4 @@
-# Paper Backups of Ascii PGP Keys
+# Easy Paper Backups of Ascii PGP Keys
 
 Shell scripts to convert between ascii armor PGP keys and QR codes for paper backup.
 
@@ -6,25 +6,26 @@ After exporting your private keys in ascii armor format, you can use the scripts
 in this project to convert them to PNG images that can be printed and archived.
 
 This is ever so slightly easier than printing the ascii key directly and using OCR
-software to recreate the key.
+software to recreate the key files.
 
 ## Dependencies
 
 This project depends on a couple libraries that come with applicatons that are called
 by these scripts.
 
-    libqrencode (http://fukuchi.org/works/qrencode/)
-    zbar (http://zbar.sourceforge.net)
+1. [libqrencode](http://fukuchi.org/works/qrencode/)
+2. [zbar](http://zbar.sourceforge.net)
 
 ## Export keys From GPG
 
-To export keys from GPG use one of these commands:
+There are several good guides on the web about managing GPG keys and creating backups.
+The quick version is to use one of these commands:
 
     gpg --armor --export > pgp-public-keys.asc
     gpg --armor --export-secret-keys > pgp-private-keys.asc
     gpg --armor --gen-revoke [your key ID] > pgp-revocation.asc
 
-*NOTE* Be sure to securely remove your private and revocation keys once they
+**NOTE** Be sure to securely remove your private and revocation keys once they
 are correctly backed up. This can be done from the command line with either the 'srm'
 tool on Max OS X or with 'shred' on Linux.
 
@@ -67,6 +68,6 @@ To import keys into GPG use one of these commands:
     gpg --import pgp-public-keys.asc
     gpg --import pgp-private-keys.asc
 
-*NOTE* Be sure to securely remove your private and revocation keys once they
+**NOTE** Be sure to securely remove your private and revocation keys once they
 are correctly backed up. This can be done from the command line with either the 'srm'
 tool on Max OS X or with 'shred' on Linux.
