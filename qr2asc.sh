@@ -52,7 +52,7 @@ for img in "$@"; do
 	fi
 	asc_key="${tmp_file}.${index}"
 	echo "decoding ${img}"
-    chunk=$( zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' )
+    chunk=$( zbarimg --raw -Sdisable -Sqrcode.enable ${img} 2>/dev/null )
 	if [ $? -ne 0 ]; then
 		echo "failed to decode QR image"
 		exit 2
