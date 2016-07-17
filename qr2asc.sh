@@ -43,6 +43,7 @@ if [ $? -ne 0 ]; then
 fi
 
 # For each image on the command line, decode it into text
+chunks=()
 index=1
 for img in "$@"; do
 	if [ ! -f ${img} ]; then
@@ -51,24 +52,19 @@ for img in "$@"; do
 	fi
 	asc_key="${tmp_file}.${index}"
 	echo "decoding ${img}"
-	zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' > ${asc_key}
+    chunk=$( zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' )
 	if [ $? -ne 0 ]; then
 		echo "failed to decode QR image"
 		exit 2
 	fi
+    chunks+=("${chunk}")
 	index=$((index+1))
 done
 
+asc_key=""
+for c in "${chunks[@]}"; do
+    asc_key+="${c}"
+done
+
 echo "creating ${output_key_name}"
-cat ${tmp_file}.* > ${output_key_name}
-
-# Find the correct secure deletion utility (srm on Mac, shred on Linux)
-sec_del="srm"
-which ${sec_del} 2>&1 1>/dev/null
-if [ $? -ne 0 ]; then
-	sec_del="shred --remove"
-fi
-
-# Securely clean up temporary files
-${sec_del} ${tmp_file}
-${sec_del} ${tmp_file}.*
+echo "${asc_key}" > ${output_key_name}
