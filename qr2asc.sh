@@ -44,6 +44,10 @@ for img in "$@"; do
 	asc_key="${tmp_file}.${index}"
 	echo "decoding ${img}"
     chunk=$( zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' )
+    # Please use this next line instead of teh one above if zbarimg does
+    # not decode the qr code properly in tests
+    # (zbarimg needs to be told it is being given a qr code to decode)
+    #chunk=$( zbarimg --raw --set disable --set qrcode.enable ${img} 2>/dev/null )
 	if [ $? -ne 0 ]; then
 		echo "failed to decode QR image"
 		exit 2
