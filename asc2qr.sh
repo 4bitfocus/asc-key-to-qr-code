@@ -49,7 +49,6 @@ fi
 chunks=()
 while true; do
     s=$( head -c ${max_qr_bytes} )
-    echo "$s"
     if [ ${#s} -gt 0 ]; then
         chunks+=("${s}")
     else
