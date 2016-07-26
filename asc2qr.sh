@@ -48,13 +48,13 @@ fi
 ## Split the key file into usable chunks that the QR encoder can consume
 chunks=()
 while true; do
-    s=$( head -c ${max_qr_bytes} )
+    s=$( dd bs=${max_qr_bytes} count=1 2>/dev/null )
     if [ ${#s} -gt 0 ]; then
         chunks+=("${s}")
     else
         break
     fi
-done <<< "$( cat ${asc_key} )"
+done < ${asc_key}
 
 ## For each chunk, encode it into a qr image
 index=1
