@@ -33,16 +33,8 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
-# Create a temp file to use as a pattern for splitting the input key file.
-# This helps protect against file collisions in the current directory.
-export TMPDIR=""
-tmp_file=$(mktemp keyparts.XXXXXX)
-if [ $? -ne 0 ]; then
-	echo "failed to create temporary file"
-	exit 1
-fi
-
 # For each image on the command line, decode it into text
+chunks=()
 index=1
 for img in "$@"; do
 	if [ ! -f ${img} ]; then
@@ -51,24 +43,23 @@ for img in "$@"; do
 	fi
 	asc_key="${tmp_file}.${index}"
 	echo "decoding ${img}"
-	zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' > ${asc_key}
+    chunk=$( zbarimg --raw ${img} 2>/dev/null | perl -p -e 'chomp if eof' )
+    # Please use this next line instead of teh one above if zbarimg does
+    # not decode the qr code properly in tests
+    # (zbarimg needs to be told it is being given a qr code to decode)
+    #chunk=$( zbarimg --raw --set disable --set qrcode.enable ${img} 2>/dev/null )
 	if [ $? -ne 0 ]; then
 		echo "failed to decode QR image"
 		exit 2
 	fi
+    chunks+=("${chunk}")
 	index=$((index+1))
 done
 
+asc_key=""
+for c in "${chunks[@]}"; do
+    asc_key+="${c}"
+done
+
 echo "creating ${output_key_name}"
-cat ${tmp_file}.* > ${output_key_name}
-
-# Find the correct secure deletion utility (srm on Mac, shred on Linux)
-sec_del="srm"
-which ${sec_del} 2>&1 1>/dev/null
-if [ $? -ne 0 ]; then
-	sec_del="shred --remove"
-fi
-
-# Securely clean up temporary files
-${sec_del} ${tmp_file}
-${sec_del} ${tmp_file}.*
+echo "${asc_key}" > ${output_key_name}
