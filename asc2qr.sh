@@ -48,7 +48,7 @@ fi
 ## Split the key file into usable chunks that the QR encoder can consume
 chunks=()
 while true; do
-    s=$( dd bs=${max_qr_bytes} count=1 2>/dev/null )
+    IFS= read -r -d'\0' -n ${max_qr_bytes} s
     if [ ${#s} -gt 0 ]; then
         chunks+=("${s}")
     else
