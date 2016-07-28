@@ -33,15 +33,6 @@ if [ $# -lt 1 ]; then
 	exit 1
 fi
 
-# Create a temp file to use as a pattern for splitting the input key file.
-# This helps protect against file collisions in the current directory.
-export TMPDIR=""
-tmp_file=$(mktemp keyparts.XXXXXX)
-if [ $? -ne 0 ]; then
-	echo "failed to create temporary file"
-	exit 1
-fi
-
 # For each image on the command line, decode it into text
 chunks=()
 index=1
