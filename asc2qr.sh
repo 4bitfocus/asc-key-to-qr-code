@@ -40,8 +40,8 @@ if [ $# -ne 1 ]; then
 fi
 
 asc_key=${1}
-if [ ! -f ${asc_key} ]; then
-	echo "key file not found: ${asc_key}"
+if [ ! -f "${asc_key}" ]; then
+	echo "key file not found: '${asc_key}'"
 	exit 1
 fi
 

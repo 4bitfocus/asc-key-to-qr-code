@@ -37,13 +37,13 @@ fi
 chunks=()
 index=1
 for img in "$@"; do
-	if [ ! -f ${img} ]; then
-		echo "image file not found: ${img}"
+	if [ ! -f "${img}" ]; then
+		echo "image file not found: '${img}'"
 		exit 1
 	fi
 	asc_key="${tmp_file}.${index}"
 	echo "decoding ${img}"
-    chunk=$( zbarimg --raw --set disable --set qrcode.enable ${img} 2>/dev/null )
+    chunk=$( zbarimg --raw --set disable --set qrcode.enable "${img}" 2>/dev/null )
 	if [ $? -ne 0 ]; then
 		echo "failed to decode QR image"
 		exit 2
