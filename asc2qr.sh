@@ -28,7 +28,7 @@
 
 # Maximum chuck size to send to the QR encoder. QR version 40 supports
 # 2,953 bytes of storage.
-max_qr_bytes=2800
+max_qr_bytes=1000
 
 # Prefix string for the PNG images that are produced
 image_prefix="QR"
